@@ -422,15 +422,30 @@ def forward_back_prop(rnn, optimizer, criterion, inp, target, hidden):
     :param target: The target output for the batch of input
     :return: The loss and the latest hidden state Tensor
     """
+    if(train_on_gpu):
+        rnn.cuda()
 
-    # TODO: Implement Function
+    # initialise hidden layer to prevent vanishing gradient
+    h = tuple([each.data for each in hidden])
+    rnn.zero_grad()
 
     # move data to GPU, if available
+    if(train_on_gpu):
+        inp, target = inp.cuda(), target.cuda()
+
+    # perform forward step
+    output, h = rnn(inp, h)
 
     # perform backpropagation and optimization
+    loss = criterion(output, target)
+    loss.backward()
+
+    # clip gradient to prevent exploding gradient
+    nn.utils.clip_grad_norm_(rnn.parameters(), 5)
+    optimizer.step()
 
     # return the loss over a batch and the hidden state produced by our model
-    return None, None
+    return loss.item(), h
 
 
 # Note that these tests aren't completely extensive.
