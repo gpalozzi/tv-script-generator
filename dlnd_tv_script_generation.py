@@ -68,10 +68,14 @@ def create_lookup_tables(text):
     :param text: The text of tv scripts split into words
     :return: A tuple of dicts (vocab_to_int, int_to_vocab)
     """
-    # TODO: Implement Function
+    word_counts = Counter(text)
+    sorted_vocab = sorted(word_counts, key=word_counts.get, reverse=True)
+
+    int_to_vocab = {ii: word for ii, word in enumerate(sorted_vocab)}
+    vocab_to_int = {word: ii for ii, word in int_to_vocab.items()}
 
     # return tuple
-    return (None, None)
+    return (vocab_to_int, int_to_vocab)
 
 
 """
@@ -107,7 +111,18 @@ def token_lookup():
     """
     # TODO: Implement Function
 
-    return None
+    return {
+        '.': '||Period||',
+        ',': '||Comma||',
+        '"': '||Quotation_Mark||',
+        ';': '||Semicolon||',
+        '!': '||Exclamation_Mark||',
+        '?': '||Question_Mark||',
+        '(': '||Left_Parentheses||',
+        ')': '||Right_Parentheses||',
+        '-': '||Dash||',
+        '\n': '||Return||'
+    }
 
 
 """
