@@ -222,12 +222,13 @@ def batch_data(words, sequence_length, batch_size):
     :return: DataLoader with batched data
     """
     n_batches = len(words) // batch_size
-    words = np.array(words[:n_batches * batch_size])
+    words = words[:n_batches * batch_size]
     features, targets = [], []
     for idx in range(0, (len(words) - sequence_length)):
         features.append(words[idx: idx + sequence_length])
         targets.append(words[idx + sequence_length])
-    data = TensorDataset(torch.from_numpy(features), torch.from_numpy(targets))
+    data = TensorDataset(torch.from_numpy(np.asarray(
+        features)), torch.from_numpy(np.asarray(targets)))
     data_loader = torch.utils.data.DataLoader(
         data, shuffle=False, batch_size=batch_size)
 
@@ -519,9 +520,9 @@ def train_rnn(rnn, batch_size, optimizer, criterion, n_epochs, show_every_n_batc
 # %%
 # Data params
 # Sequence Length
-sequence_length = 5  # of words in a sequence
+sequence_length = 10  # of words in a sequence
 # Batch Size
-batch_size = 56
+batch_size = 128
 
 # data loader - do not change
 train_loader = batch_data(int_text, sequence_length, batch_size)
@@ -588,6 +589,8 @@ print('Model Trained and Saved')
 # The first model has been trained for 10 ephocs with a sequence length of 5 words which is the average number of words per line in the scripts.
 # A batch size of 56 and 2 LSTM layers, 200 for the embedding dimension and 256 for the hidden layer has suggested for models using LSTM.
 # The model converged to a loss around 3.5 with just a few batches actually reaching a loss below that value.
+# With the final hyperparameters set to sequence length of 10 words and a batch size of 128,
+# The model converged fastly to a loss around 3.2.
 # %% [markdown]
 # ---
 # # Checkpoint
