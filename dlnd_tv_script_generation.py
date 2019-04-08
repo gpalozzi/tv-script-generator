@@ -331,11 +331,22 @@ class RNN(nn.Module):
         :param dropout: dropout to add in between LSTM/GRU layers
         """
         super(RNN, self).__init__()
-        # TODO: Implement function
 
         # set class variables
+        self.output_size = output_size
+        self.n_layers = n_layers
+        self.hidden_dim = hidden_dim
 
         # define model layers
+        # embedding layer
+        self.embedding = nn.Embedding(vocab_size, embedding_dim)
+
+        # LSTM layer with dropout
+        self.lstm = nn.LSTM(embedding_dim, hidden_dim,
+                            n_layers, dropout=dropout, batch_first=True)
+
+        # Fully connected layer
+        self.fc = nn.Linear(hidden_dim, output_size)
 
     def forward(self, nn_input, hidden):
         """
@@ -344,10 +355,23 @@ class RNN(nn.Module):
         :param hidden: The hidden state
         :return: Two Tensors, the output of the neural network and the latest hidden state
         """
-        # TODO: Implement function
+
+        batch_size = nn_input.size(0)
+
+        embeds = self.embedding(nn_input)
+        lstm_output, hidden = self.lstm(embeds, hidden)
+        # stack up lstm outputs
+        lstm_output = lstm_output.contiguous().view(-1, self.hidden_dim)
+        output = self.fc(lstm_output)
+
+        # reshape into (batch_size, seq_length, output_size)
+        output = output.view(batch_size, -1, self.output_size)
+
+        # get last batch
+        out = output[:, -1]
 
         # return one batch of output word scores and the hidden state
-        return None, None
+        return out, hidden
 
     def init_hidden(self, batch_size):
         '''
@@ -355,11 +379,17 @@ class RNN(nn.Module):
         :param batch_size: The batch_size of the hidden state
         :return: hidden state of dims (n_layers, batch_size, hidden_dim)
         '''
-        # Implement function
 
         # initialize hidden state with zero weights, and move to GPU if available
+        weight = next(self.parameters()).data
 
-        return None
+        if (train_on_gpu):
+            hidden = (weight.new(self.n_layers, batch_size, self.hidden_dim).zero_().cuda(),
+                      weight.new(self.n_layers, batch_size, self.hidden_dim).zero_().cuda())
+        else:
+            hidden = (weight.new(self.n_layers, batch_size, self.hidden_dim).zero_(),
+                      weight.new(self.n_layers, batch_size, self.hidden_dim).zero_())
+        return hidden
 
 
 """
