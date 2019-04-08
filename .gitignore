@@ -1,3 +1,7 @@
+# Models & Outputs
+generated_scripts/
+saved_models/
+
 # IDE
 .vscode/
 
