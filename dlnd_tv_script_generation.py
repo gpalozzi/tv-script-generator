@@ -221,24 +221,18 @@ def batch_data(words, sequence_length, batch_size):
     :param batch_size: The size of each batch; the number of sequences in a batch
     :return: DataLoader with batched data
     """
-    words = np.array(words)
-    # TODO: Implement function
-    batch_size_total = batch_size * sequence_length
-    n_batches = len(words) // batch_size_total
-
-    feature_tensor = words[:n_batches
-                           * batch_size_total].reshape((batch_size, -1))
-
-    target_tensor = np.roll(feature_tensor[:, 0], -1)
-
-    data = TensorDataset(torch.from_numpy(feature_tensor),
-                         torch.from_numpy(target_tensor))
-    data_loader = torch.utils.data.DataLoader(data,
-                                              batch_size=batch_size)
+    n_batches = len(words) // batch_size
+    words = np.array(words[:n_batches * batch_size])
+    features, targets = [], []
+    for idx in range(0, (len(words) - sequence_length)):
+        features.append(words[idx: idx + sequence_length])
+        targets.append(words[idx + sequence_length])
+    data = TensorDataset(torch.from_numpy(features), torch.from_numpy(targets))
+    data_loader = torch.utils.data.DataLoader(
+        data, shuffle=False, batch_size=batch_size)
 
     # return a dataloader
     return data_loader
-
 
 # there is no test for this function, but you are encouraged to create
 # print statements and tests of your own
