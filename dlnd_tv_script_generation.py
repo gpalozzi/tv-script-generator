@@ -519,9 +519,9 @@ def train_rnn(rnn, batch_size, optimizer, criterion, n_epochs, show_every_n_batc
 # %%
 # Data params
 # Sequence Length
-sequence_length =   # of words in a sequence
+sequence_length = 5  # of words in a sequence
 # Batch Size
-batch_size =
+batch_size = 56
 
 # data loader - do not change
 train_loader = batch_data(int_text, sequence_length, batch_size)
@@ -530,21 +530,21 @@ train_loader = batch_data(int_text, sequence_length, batch_size)
 # %%
 # Training parameters
 # Number of Epochs
-num_epochs =
+num_epochs = 10
 # Learning Rate
-learning_rate =
+learning_rate = 0.001
 
 # Model parameters
 # Vocab size
-vocab_size =
+vocab_size = len(vocab_to_int)
 # Output size
-output_size =
+output_size = vocab_size
 # Embedding Dimension
-embedding_dim =
+embedding_dim = 200
 # Hidden Dimension
-hidden_dim =
+hidden_dim = 256
 # Number of RNN Layers
-n_layers =
+n_layers = 2
 
 # Show stats for every n number of batches
 show_every_n_batches = 500
@@ -584,6 +584,10 @@ print('Model Trained and Saved')
 # For example, did you try different sequence_lengths and find that one size made the model converge faster? What about your hidden_dim and n_layers; how did you decide on those?
 # %% [markdown]
 # **Answer:** (Write answer, here)
+#
+# The first model has been trained for 10 ephocs with a sequence length of 5 words which is the average number of words per line in the scripts.
+# A batch size of 56 and 2 LSTM layers, 200 for the embedding dimension and 256 for the hidden layer has suggested for models using LSTM.
+# The model converged to a loss around 3.5 with just a few batches actually reaching a loss below that value.
 # %% [markdown]
 # ---
 # # Checkpoint
