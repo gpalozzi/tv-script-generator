@@ -60,6 +60,7 @@ print('\n'.join(text.split('\n')[view_line_range[0]:view_line_range[1]]))
 
 # %%
 import problem_unittests as tests
+from collections import Counter
 
 
 def create_lookup_tables(text):
@@ -225,8 +226,8 @@ def batch_data(words, sequence_length, batch_size):
     batch_size_total = batch_size * sequence_length
     n_batches = len(words) // batch_size_total
 
-    feature_tensor = words[:n_batches *
-                           batch_size_total].reshape((batch_size, -1))
+    feature_tensor = words[:n_batches
+                           * batch_size_total].reshape((batch_size, -1))
 
     target_tensor = np.roll(feature_tensor[:, 0], -1)
 
