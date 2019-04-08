@@ -589,6 +589,8 @@ print('Model Trained and Saved')
 # The first model has been trained for 10 ephocs with a sequence length of 5 words which is the average number of words per line in the scripts.
 # A batch size of 56 and 2 LSTM layers, 200 for the embedding dimension and 256 for the hidden layer has suggested for models using LSTM.
 # The model converged to a loss around 3.5 with just a few batches actually reaching a loss below that value.
+# With the final hyperparameters set to sequence length of 10 words and a batch size of 128,
+# The model converged fastly to a loss around 3.2.
 # %% [markdown]
 # ---
 # # Checkpoint
