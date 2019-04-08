@@ -222,12 +222,13 @@ def batch_data(words, sequence_length, batch_size):
     :return: DataLoader with batched data
     """
     n_batches = len(words) // batch_size
-    words = np.array(words[:n_batches * batch_size])
+    words = words[:n_batches * batch_size]
     features, targets = [], []
     for idx in range(0, (len(words) - sequence_length)):
         features.append(words[idx: idx + sequence_length])
         targets.append(words[idx + sequence_length])
-    data = TensorDataset(torch.from_numpy(features), torch.from_numpy(targets))
+    data = TensorDataset(torch.from_numpy(np.asarray(
+        features)), torch.from_numpy(np.asarray(targets)))
     data_loader = torch.utils.data.DataLoader(
         data, shuffle=False, batch_size=batch_size)
 
